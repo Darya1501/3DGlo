@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.querySelector('.menu'),
       menu = document.querySelector('menu'),
       closeBtn = document.querySelector('.close-btn'),
-      menuItems = menu.querySelectorAll('ul>li');
+      menuItems = menu.querySelectorAll('ul>li>a');
 
     const hendlerMenu = () => {
       menu.classList.toggle('active-menu');
