@@ -117,4 +117,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
   togglePopup();
 
+
+  // Плавная прокрутка. Вопрос: Этот способ подходит или нужен через scrollBy?
+  const anchors = document.querySelectorAll('a[href*="#"]');
+
+  for (const anchor of anchors) {
+    anchor.addEventListener('click', event => {
+      event.preventDefault();
+
+      const blockID = anchor.getAttribute('href').substr(1);
+
+      document.getElementById(blockID).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }
+
 });
