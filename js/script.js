@@ -35,5 +35,86 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  countTimer('2021, 8, 22');
+  countTimer('2021, 8, 31');
+
+
+  // Меню
+  const toggleMenu = () => {
+
+    const menuBtn = document.querySelector('.menu'),
+      menu = document.querySelector('menu'),
+      closeBtn = document.querySelector('.close-btn'),
+      menuItems = menu.querySelectorAll('ul>li');
+
+    const hendlerMenu = () => {
+      menu.classList.toggle('active-menu');
+    };
+
+    menuBtn.addEventListener('click', () => {
+      hendlerMenu();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      hendlerMenu();
+    });
+
+    menuItems.forEach(elem => elem.addEventListener('click', hendlerMenu));
+
+  };
+
+  toggleMenu();
+
+
+  // Popup
+
+  const togglePopup = () => {
+    const popup = document.querySelector('.popup'),
+      popupBtn = document.querySelectorAll('.popup-btn'),
+      popupClose = document.querySelector('.popup-close'),
+      popupContent = popup.querySelector('.popup-content');
+
+
+    popupBtn.forEach(elem => {
+      elem.addEventListener('click', () => {
+        popup.style.display = 'block';
+
+        let reqID = 0;
+        const animate = () => {
+          if (popupContent.style.opacity < 1) {
+            popupContent.style.opacity = 0.05 + parseFloat(popupContent.style.opacity);
+            popupContent.style.top = -1 + parseFloat(popupContent.style.top) + '%';
+          } else {
+            cancelAnimationFrame(reqID);
+            return;
+          }
+          reqID = requestAnimationFrame(animate);
+        };
+        if (document.documentElement.clientWidth > 768) {
+          popupContent.style.opacity = 0;
+          popupContent.style.top = 30 + '%';
+          animate();
+        }
+      });
+    });
+
+    popupClose.addEventListener('click', () => {
+
+      let reqID = 0;
+      const animate = () => {
+        if (popupContent.style.opacity >= 0) {
+          popupContent.style.opacity = -0.05 + parseFloat(popupContent.style.opacity);
+        } else {
+          cancelAnimationFrame(reqID);
+          popup.style.display = 'none';
+          popupContent.style.opacity = 1;
+          return;
+        }
+        reqID = requestAnimationFrame(animate);
+      };
+      if (document.documentElement.clientWidth > 768) { animate(); } else popup.style.display = 'none';
+    });
+  };
+
+  togglePopup();
+
 });
