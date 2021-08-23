@@ -41,40 +41,33 @@ window.addEventListener('DOMContentLoaded', () => {
   // Меню
   const toggleMenu = () => {
 
-    const menuBtn = document.querySelector('.menu'),
-      menu = document.querySelector('menu'),
-      closeBtn = document.querySelector('.close-btn'),
-      menuItems = menu.querySelectorAll('ul>li>a');
-
+    const menu = document.querySelector('menu');
     const hendlerMenu = () => {
       menu.classList.toggle('active-menu');
     };
 
-    menuBtn.addEventListener('click', () => {
-      hendlerMenu();
+    document.addEventListener('click', event => {
+      const target = event.target;
+      if (target.closest('.menu')) {
+        hendlerMenu();
+      } else if (target.tagName === 'A' && target.closest('menu')) {
+        hendlerMenu();
+      } else if (!target.closest('menu')) {
+        hendlerMenu();
+      }
     });
-
-    closeBtn.addEventListener('click', () => {
-      hendlerMenu();
-    });
-
-    menuItems.forEach(elem => elem.addEventListener('click', hendlerMenu));
-
   };
 
   toggleMenu();
 
 
   // Popup
-
   const togglePopup = () => {
     const popup = document.querySelector('.popup'),
       popupBtn = document.querySelectorAll('.popup-btn'),
-      popupClose = document.querySelector('.popup-close'),
       popupContent = popup.querySelector('.popup-content');
 
-
-    popupBtn.forEach(elem => {
+    popupBtn.forEach(elem => { // открытие модального окна
       elem.addEventListener('click', () => {
         popup.style.display = 'block';
 
@@ -97,28 +90,23 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    popupClose.addEventListener('click', () => {
-
-      let reqID = 0;
-      const animate = () => {
-        if (popupContent.style.opacity >= 0) {
-          popupContent.style.opacity = -0.05 + parseFloat(popupContent.style.opacity);
-        } else {
-          cancelAnimationFrame(reqID);
+    popup.addEventListener('click', event => { // Закрытие модального окна
+      let target = event.target;
+      if (target.classList.contains('popup-close')) {
+        popup.style.display = 'none';
+      } else {
+        target = target.closest('.popup-content');
+        if (!target) {
           popup.style.display = 'none';
-          popupContent.style.opacity = 1;
-          return;
         }
-        reqID = requestAnimationFrame(animate);
-      };
-      if (document.documentElement.clientWidth > 768) { animate(); } else popup.style.display = 'none';
+      }
     });
   };
 
   togglePopup();
 
 
-  // Плавная прокрутка. Вопрос: Этот способ подходит или нужен через scrollBy?
+  // Плавная прокрутка
   const anchors = document.querySelectorAll('a[href*="#"]');
 
   for (const anchor of anchors) {
@@ -126,12 +114,48 @@ window.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
 
       const blockID = anchor.getAttribute('href').substr(1);
+      const block = document.getElementById(blockID);
 
-      document.getElementById(blockID).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      if (block) {
+        block.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     });
   }
+
+
+  // Табы
+  const tabs = () => {
+    const tabHeader = document.querySelector('.service-header'),
+      tab = tabHeader.querySelectorAll('.service-header-tab'),
+      tabContent = document.querySelectorAll('.service-tab');
+
+    const toggleTabContent = index => {
+      for (let i = 0; i < tabContent.length; i++) {
+        if (index === i) {
+          tab[i].classList.add('active');
+          tabContent[i].classList.remove('d-none');
+        } else {
+          tab[i].classList.remove('active');
+          tabContent[i].classList.add('d-none');
+        }
+      }
+    };
+
+    tabHeader.addEventListener('click', event => {
+      let target = event.target;
+      target = target.closest('.service-header-tab');
+      if (target.classList.contains('service-header-tab')) {
+        tab.forEach((item, i) => {
+          if (item === target) {
+            toggleTabContent(i);
+          }
+        });
+      }
+    });
+  };
+  tabs();
 
 });
