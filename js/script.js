@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
         hendlerMenu();
       } else if (target.tagName === 'A' && target.closest('menu')) {
         hendlerMenu();
-      } else if (!target.closest('menu')) {
+      } else if (menu.classList.contains('active-menu') && !target.closest('menu')) {
         hendlerMenu();
       }
     });
