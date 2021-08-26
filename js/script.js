@@ -216,7 +216,6 @@ window.addEventListener('DOMContentLoaded', () => {
       prevSlide(dots, currentSlide, 'dot-active');
 
       if (target.matches('#arrow-right')) {
-        console.log('currentSlide: ', currentSlide);
         currentSlide++;
       } else if (target.matches('#arrow-left')) {
         currentSlide--;
@@ -254,7 +253,6 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   slider();
 
-  // Валидация полей калькулятора
 
   // Смена фото в блоке "Наша команда" при наведении
   const toggleImage = () => {
@@ -278,6 +276,70 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
   toggleImage();
+
+
+  // Валидация полей
+  const validate = () => {
+    const numberFields = document.querySelectorAll('.calc-block > input'),
+      name = document.querySelector('.top-form[type="text"'),
+      message = document.querySelector('.mess'),
+      emails = document.querySelectorAll('.form-email'),
+      phones = document.querySelectorAll('.form-phone');
+
+    const inputs = [];
+    inputs.push(message);
+
+    const validateInput = (field, symbols) => {
+      field.addEventListener('input', () => {
+        field.value = field.value.replace(symbols, '');
+      });
+    };
+
+    const validateBlur = (field => {
+      field.addEventListener('blur', () => {
+        field.value = field.value.replace(/( |-)\1{1,}/g, "$1");
+        field.value = field.value.replace(/^( |-)/, '');
+        field.value = field.value.replace(/( |-)$/, '');
+        const event = new Event('input');
+        field.dispatchEvent(event);
+      });
+    });
+
+    numberFields.forEach(field => {
+      inputs.push(field);
+      field.addEventListener('input', () => {
+        validateInput(field, /\D/g);
+      });
+    });
+
+    emails.forEach(email => {
+      inputs.push(email);
+      email.addEventListener('input', () => {
+        validateInput(email, /[^A-Za-z0-9@-_.!~*']/g);
+      });
+    });
+
+    phones.forEach(phone => {
+      inputs.push(phone);
+      phone.addEventListener('input', () => {
+        validateInput(phone, /[^0-9-()+]/g);
+      });
+    });
+
+    validateInput(name, /[^А-Яа-я -]/g);
+    validateInput(message, /[^А-Яа-я -]/g);
+
+    name.addEventListener('blur', () => {
+      name.value = name.value.toLowerCase();
+      name.value = name.value.replace(/(^|\s)\S/g, a => a.toUpperCase());
+    });
+
+    inputs.forEach(input => {
+      validateBlur(input);
+    });
+
+  };
+  validate();
 
 
 });
