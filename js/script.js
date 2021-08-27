@@ -291,6 +291,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const validateInput = (field, symbols) => {
       field.addEventListener('input', () => {
+        console.log(field.value);
         field.value = field.value.replace(symbols, '');
       });
     };
@@ -307,9 +308,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     numberFields.forEach(field => {
       inputs.push(field);
-      field.addEventListener('input', () => {
-        validateInput(field, /\D/g);
-      });
+      validateInput(field, /\D/g);
     });
 
     emails.forEach(email => {
