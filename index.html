@@ -585,6 +585,43 @@
       </div>
     </div>
 
+    <script src="plugins/validator/validator.js"></script>
     <script src="js/script.js"></script>
+
+    <script>
+      const valid1 = new Validator({
+        selector: "#form1",
+        pattern: {},
+        method: {
+          "form1-name": [["pattern", "name"]],
+          "form1-phone": [["notEmpty"], ["pattern", "phone"]],
+          "form1-email": [["pattern", "email"]],
+        },
+      });
+      valid1.init();
+
+      const valid2 = new Validator({
+        selector: "#form2",
+        pattern: {},
+        method: {
+          "form2-name": [["pattern", "name"]],
+          "form2-phone": [["notEmpty"], ["pattern", "phone"]],
+          "form2-email": [["pattern", "email"]],
+          "form2-message": [["pattern", "message"]],
+        },
+      });
+      valid2.init();
+
+      const valid3 = new Validator({
+        selector: "#form3",
+        pattern: {},
+        method: {
+          "form3-name": [["pattern", "name"]],
+          "form3-phone": [["notEmpty"], ["pattern", "phone"]],
+          "form3-email": [["pattern", "email"]],
+        },
+      });
+      valid3.init();
+    </script>
   </body>
 </html>

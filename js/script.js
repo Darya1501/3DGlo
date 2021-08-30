@@ -291,7 +291,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const validateInput = (field, symbols) => {
       field.addEventListener('input', () => {
-        console.log(field.value);
         field.value = field.value.replace(symbols, '');
       });
     };
@@ -313,16 +312,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     emails.forEach(email => {
       inputs.push(email);
-      email.addEventListener('input', () => {
-        validateInput(email, /[^A-Za-z0-9@-_.!~*']/g);
-      });
+      validateInput(email, /[^A-Za-z0-9@-_.!~*']/g);
     });
 
     phones.forEach(phone => {
       inputs.push(phone);
-      phone.addEventListener('input', () => {
-        validateInput(phone, /[^0-9-()+]/g);
-      });
+      validateInput(phone, /[^0-9-()+]/g);
     });
 
     validateInput(name, /[^А-Яа-я -]/g);
