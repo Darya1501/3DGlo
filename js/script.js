@@ -281,7 +281,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // Валидация полей
   const validate = () => {
     const numberFields = document.querySelectorAll('.calc-block > input'),
-      name = document.querySelector('.top-form[type="text"'),
+      names = document.querySelectorAll('.form-name'),
       message = document.querySelector('.mess'),
       emails = document.querySelectorAll('.form-email'),
       phones = document.querySelectorAll('.form-phone');
@@ -291,13 +291,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const validateInput = (field, symbols) => {
       field.addEventListener('input', () => {
-        console.log(field.value);
         field.value = field.value.replace(symbols, '');
       });
     };
 
     const validateBlur = (field => {
       field.addEventListener('blur', () => {
+        console.log(field);
         field.value = field.value.replace(/( |-)\1{1,}/g, "$1");
         field.value = field.value.replace(/^( |-)/, '');
         field.value = field.value.replace(/( |-)$/, '');
@@ -321,13 +321,12 @@ window.addEventListener('DOMContentLoaded', () => {
       validateInput(phone, /[^0-9-()+]/g);
     });
 
-    validateInput(name, /[^А-Яа-я -]/g);
-    validateInput(message, /[^А-Яа-я -]/g);
-
-    name.addEventListener('blur', () => {
-      name.value = name.value.toLowerCase();
-      name.value = name.value.replace(/(^|\s)\S/g, a => a.toUpperCase());
+    names.forEach(name => {
+      inputs.push(name);
+      validateInput(name, /[^А-Яа-я -]/g);
     });
+
+    validateInput(message, /[^А-Яа-я -0-9!?,.]/g);
 
     inputs.forEach(input => {
       validateBlur(input);
@@ -336,8 +335,8 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   validate();
 
-  // Калькулятор
 
+  // Калькулятор
   const calc = (price = 100) => {
     const calcBlock = document.querySelector('.calc-block'),
       calcType = document.querySelector('.calc-type'),
@@ -345,7 +344,6 @@ window.addEventListener('DOMContentLoaded', () => {
       calcDay = document.querySelector('.calc-day'),
       calcCount = document.querySelector('.calc-count'),
       totalValue = document.getElementById('total');
-
 
     const countSum = () => {
       let total = 0,
@@ -381,16 +379,77 @@ window.addEventListener('DOMContentLoaded', () => {
       }, 1);
     };
 
-
     calcBlock.addEventListener('change', event => {
       const target = event.target;
       if (target.matches('select') || target.matches('input')) {
         countSum();
       }
     });
-
-
   };
   calc();
+
+
+  // Отправка форм ajax
+  const sendForm = () => {
+    const errorMessage = 'Что-то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+    const form1 = document.getElementById('form1');
+    const form2 = document.getElementById('form2');
+    const form3 = document.getElementById('form3');
+
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = 'font-size: 2rem; color: #fff;';
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+      request.addEventListener('readystatechange', () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+
+    const formHandler = form => {
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        form.appendChild(statusMessage);
+        statusMessage.textContent = loadMessage;
+
+        const formData = new FormData(form);
+        const body = {};
+        formData.forEach((val, key) => {
+          body[key] = val;
+        });
+
+        postData(body,
+          () => {
+            statusMessage.textContent = successMessage;
+          },
+          error => {
+            statusMessage.textContent = errorMessage;
+            console.log('error: ', error);
+          });
+
+        form.reset();
+
+      });
+    };
+
+    formHandler(form1);
+    formHandler(form2);
+    formHandler(form3);
+
+  };
+  sendForm();
 
 });
