@@ -401,22 +401,22 @@ window.addEventListener('DOMContentLoaded', () => {
       background-position: top center;
     `;
 
-    const postData = (body, outputData, errorData) => {
+    const postData = body => new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
       request.addEventListener('readystatechange', () => {
         if (request.readyState !== 4) {
           return;
         }
         if (request.status === 200) {
-          outputData();
+          resolve();
         } else {
-          errorData(request.status);
+          reject(request.status);
         }
       });
       request.open('POST', './server.php');
       request.setRequestHeader('Content-Type', 'application/json');
       request.send(JSON.stringify(body));
-    };
+    });
 
     const formHandler = form => {
       form.addEventListener('submit', event => {
@@ -430,15 +430,19 @@ window.addEventListener('DOMContentLoaded', () => {
           body[key] = val;
         });
 
-        postData(body,
-          () => {
-            statusMessage.style.backgroundImage = 'url(images/success.svg)';
-            form.reset();
-          },
-          error => {
-            statusMessage.style.backgroundImage = 'url(images/error.svg)';
-            console.log('error: ', error);
-          });
+        postData(body)
+          .then(
+            () => {
+              statusMessage.style.backgroundImage = 'url(images/success.svg)';
+              form.reset();
+            }
+          )
+          .catch(
+            error => {
+              statusMessage.style.backgroundImage = 'url(images/error.svg)';
+              console.log('error: ', error);
+            }
+          );
 
       });
     };
