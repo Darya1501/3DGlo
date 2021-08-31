@@ -34,7 +34,6 @@ window.addEventListener('DOMContentLoaded', () => {
       timerSeconds.textContent = '00';
     }
   }
-
   countTimer('2021, 8, 31');
 
 
@@ -58,7 +57,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     });
   };
-
   toggleMenu();
 
 
@@ -103,13 +101,11 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   };
-
   togglePopup();
 
 
   // Плавная прокрутка
   const anchors = document.querySelectorAll('a[href*="#"]');
-
   for (const anchor of anchors) {
     anchor.addEventListener('click', event => {
       event.preventDefault();
@@ -297,7 +293,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const validateBlur = (field => {
       field.addEventListener('blur', () => {
-        console.log(field);
+        field.value = field.value.replace(/^.{0,1}$/g, '');
         field.value = field.value.replace(/( |-)\1{1,}/g, "$1");
         field.value = field.value.replace(/^( |-)/, '');
         field.value = field.value.replace(/( |-)$/, '');
@@ -391,16 +387,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Отправка форм ajax
   const sendForm = () => {
-    const errorMessage = 'Что-то пошло не так...',
-      loadMessage = 'Загрузка...',
-      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
     const form1 = document.getElementById('form1');
     const form2 = document.getElementById('form2');
     const form3 = document.getElementById('form3');
 
     const statusMessage = document.createElement('div');
-    statusMessage.style.cssText = 'font-size: 2rem; color: #fff;';
+    statusMessage.style.cssText = `
+      width: 100%;
+      height: 30px;
+      background-size: 27px;
+      background-repeat: no-repeat;
+      background-position: top center;
+    `;
 
     const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
@@ -423,7 +422,7 @@ window.addEventListener('DOMContentLoaded', () => {
       form.addEventListener('submit', event => {
         event.preventDefault();
         form.appendChild(statusMessage);
-        statusMessage.textContent = loadMessage;
+        statusMessage.style.backgroundImage = 'url(images/preloader.gif)';
 
         const formData = new FormData(form);
         const body = {};
@@ -433,14 +432,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
         postData(body,
           () => {
-            statusMessage.textContent = successMessage;
+            statusMessage.style.backgroundImage = 'url(images/success.svg)';
+            form.reset();
           },
           error => {
-            statusMessage.textContent = errorMessage;
+            statusMessage.style.backgroundImage = 'url(images/error.svg)';
             console.log('error: ', error);
           });
-
-        form.reset();
 
       });
     };
