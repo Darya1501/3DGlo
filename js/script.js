@@ -401,21 +401,12 @@ window.addEventListener('DOMContentLoaded', () => {
       background-position: top center;
     `;
 
-    const postData = body => new Promise((resolve, reject) => {
-      const request = new XMLHttpRequest();
-      request.addEventListener('readystatechange', () => {
-        if (request.readyState !== 4) {
-          return;
-        }
-        if (request.status === 200) {
-          resolve();
-        } else {
-          reject(request.status);
-        }
-      });
-      request.open('POST', './server.php');
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.send(JSON.stringify(body));
+    const postData = body => fetch('./server.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
     });
 
     const formHandler = form => {
@@ -431,12 +422,11 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         postData(body)
-          .then(
-            () => {
-              statusMessage.style.backgroundImage = 'url(images/success.svg)';
-              form.reset();
-            }
-          )
+          .then(response => {
+            if (response.status !== 200) throw new Error('Status network not 200');
+            statusMessage.style.backgroundImage = 'url(images/success.svg)';
+            form.reset();
+          })
           .catch(
             error => {
               statusMessage.style.backgroundImage = 'url(images/error.svg)';
