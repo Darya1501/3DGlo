@@ -401,7 +401,7 @@ window.addEventListener('DOMContentLoaded', () => {
       background-position: top center;
     `;
 
-    const postData = body => fetch('./server.php', {
+    const postData = async body => await fetch('./server.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
