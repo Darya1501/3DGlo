@@ -1,4 +1,5 @@
 const path = require('path');
+require('babel-polyfill');
 
 
 module.exports = {

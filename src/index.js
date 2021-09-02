@@ -12,7 +12,7 @@ import sendForm from './modules/sendForm';
 
 
 // Timer
-countTimer('2021, 8, 31');
+countTimer('2021, 9, 20');
 // Меню
 toggleMenu();
 // Popup

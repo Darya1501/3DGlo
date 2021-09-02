@@ -1,5 +1,5 @@
 const path = require('path');
-
+require('babel-polyfill');
 
 module.exports = {
   entry: './src/index.js',
