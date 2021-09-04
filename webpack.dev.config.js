@@ -13,6 +13,10 @@ module.exports = {
     open: true,
     port: 8080,
     hot: true,
+    static: {
+      directory: __dirname,
+      watch: true,
+    },
   },
   module: {
     rules: [
