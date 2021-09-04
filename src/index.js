@@ -10,7 +10,6 @@ import calc from './modules/calc';
 import sendForm from './modules/sendForm';
 
 
-
 // Timer
 countTimer('2021, 9, 20');
 // Меню

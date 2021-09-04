@@ -25,6 +25,7 @@ const calc = (price = 100) => {
 
     if (typeValue && squareValue) {
       total = price * typeValue * squareValue * countValue * dayValue;
+      total = Math.ceil(total);
     }
 
     totalValue.textContent = 0;

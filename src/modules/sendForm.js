@@ -24,6 +24,8 @@ const sendForm = () => {
   const formHandler = form => {
     form.addEventListener('submit', event => {
       event.preventDefault();
+      const errorElementsForm = [...form.elements].filter(item => item.classList.contains('error'));
+      if (errorElementsForm.length) return;
       form.appendChild(statusMessage);
       statusMessage.style.backgroundImage = 'url(images/preloader.gif)';
 
