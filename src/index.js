@@ -8,6 +8,7 @@ import toggleImage from './modules/toggleImage';
 import validate from './modules/validate';
 import calc from './modules/calc';
 import sendForm from './modules/sendForm';
+import SliderCarousel from './modules/sliderCarousel';
 
 
 // Timer
@@ -30,3 +31,27 @@ validate();
 calc();
 // Отправка форм ajax
 sendForm();
+// Слайдер-карусель
+const options = {
+  main: '.companies-wrapper',
+  wrap: '.companies-hor',
+  slidesToShow: 4,
+  infinity: true,
+
+  responsive: [
+    {
+      breakpoint: 1024,
+      slidesToShow: 3
+    },
+    {
+      breakpoint: 768,
+      slidesToShow: 2
+    },
+    {
+      breakpoint: 576,
+      slidesToShow: 1
+    }
+  ]
+};
+const carousel = new SliderCarousel(options);
+carousel.init();
